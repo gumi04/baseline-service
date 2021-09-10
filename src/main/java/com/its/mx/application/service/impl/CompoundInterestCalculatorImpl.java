@@ -21,10 +21,12 @@ import com.its.mx.application.dto.InitialInvestmentDto;
 import com.its.mx.application.dto.InvestmentYieldDto;
 import com.its.mx.application.service.CompoundInsterestCalculator;
 import java.util.ArrayList;
+import org.springframework.stereotype.Service;
 
 /**
  * The Class CompoundInterestCalculatorImpl.
  */
+@Service
 public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculator {
 
   /**
