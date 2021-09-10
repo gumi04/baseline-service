@@ -18,14 +18,12 @@ package com.its.mx.application.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * The Class InitialInvestmentDto.
  */
 @Setter
 @Getter
-@ToString
 public class InitialInvestmentDto {
 
   /** The initial investment. */

@@ -17,7 +17,6 @@ package com.its.mx.application.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * The Class InvestmentYieldDto.
@@ -25,7 +24,6 @@ import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 public class InvestmentYieldDto {
 
   /** The investment year. */
