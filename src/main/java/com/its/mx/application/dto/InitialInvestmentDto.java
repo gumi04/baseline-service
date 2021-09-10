@@ -16,13 +16,14 @@
 
 package com.its.mx.application.dto;
 
+import lombok.Getter;
 import lombok.Setter;
 
 /**
  * The Class InitialInvestmentDto.
  */
-
 @Setter
+@Getter
 public class InitialInvestmentDto {
 
   /** The initial investment. */
@@ -39,81 +40,5 @@ public class InitialInvestmentDto {
 
   /** The investment years. */
   private Integer investmentYears;
-
-
-
-  /**
-   * Gets the initial investment.
-   *
-   * @return the initial investment
-   */
-  public Double getInitialInvestment() {
-    return initialInvestment;
-  }
-
-
-
-  /**
-   * Gets the yearly input.
-   *
-   * @return the yearly input
-   */
-  public Double getYearlyInput() {
-    if (yearlyInput == null) {
-      return 0.0;
-    } else {
-      return yearlyInput;
-    }
-
-  }
-
-
-
-  /**
-   * Gets the yearly input increment.
-   *
-   * @return the yearly input increment
-   */
-  public Integer getYearlyInputIncrement() {
-    if (yearlyInputIncrement == null) {
-      return 0;
-    } else {
-      return yearlyInputIncrement;
-    }
-  }
-
-
-
-  /**
-   * Gets the investment yield.
-   *
-   * @return the investment yield
-   */
-  public float getInvestmentYield() {
-    return investmentYield;
-  }
-
-
-
-  /**
-   * Gets the investment years.
-   *
-   * @return the investment years
-   */
-  public Integer getInvestmentYears() {
-    return investmentYears;
-  }
-
-  /**
-   * To string.
-   *
-   * @return the string
-   */
-  @Override
-  public String toString() {
-    return "InitialInvestmentDto [initialInvestment=" + initialInvestment + ", yearlyInput="
-        + yearlyInput + ", yearlyInputIncrement=" + yearlyInputIncrement + ", investmentYield="
-        + investmentYield + ", investmentYears=" + investmentYears + "]";
-  }
 
 }

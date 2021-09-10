@@ -13,14 +13,14 @@
 * Fecha de creación: 8 sep 2021
 */
 
+
 package com.its.mx.application.controller;
 
 
 import com.its.mx.application.dto.InitialInvestmentDto;
 import com.its.mx.application.dto.InvestmentYieldDto;
 import com.its.mx.application.service.CompoundInsterestCalculator;
-import com.its.mx.application.service.impl.CompoundInterestCalculatorImpl;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class ApplicationController.
@@ -28,31 +28,31 @@ import java.util.ArrayList;
 public class ApplicationController {
 
   /** The calculator. */
-  private static CompoundInsterestCalculator calculator = new CompoundInterestCalculatorImpl();
+  private CompoundInsterestCalculator calculator;
 
   /**
-   * The main method.
+   * Instantiates a new application controller.
    *
-   * @param args the arguments
+   * @param calculator the calculator
    */
-  public static void main(String[] args) {
+  public ApplicationController(CompoundInsterestCalculator calculator) {
+    this.calculator = calculator;
+  }
 
-    InitialInvestmentDto initialInvestmentDto = new InitialInvestmentDto();
+  /**
+   * Creates the table yield.
+   *
+   * @param initialInvestmentDto the initial investment dto
+   * @return the array list
+   */
+  public List<InvestmentYieldDto> createTableYield(InitialInvestmentDto initialInvestmentDto) {
 
-    initialInvestmentDto.setInitialInvestment(5000.00);
-    initialInvestmentDto.setYearlyInput(3000.0);
-    initialInvestmentDto.setYearlyInputIncrement(1);
-    initialInvestmentDto.setInvestmentYears(5);
-    initialInvestmentDto.setInvestmentYield(21);
-
-
-    if (ApplicationController.calculator.validateInput(initialInvestmentDto)) {
-      ArrayList<InvestmentYieldDto> investmentYieldDto =
-          ApplicationController.calculator.createRevenueGrid(initialInvestmentDto);
-      investmentYieldDto.forEach(System.out::println);
-    } else {
-      System.out.println("No es posible procesar su solicitud con los datos proporcionados .");
+    if (calculator.validateInput(initialInvestmentDto)) {
+      return calculator.createRevenueGrid(initialInvestmentDto);
     }
+
+    throw new CalculatorInputException(
+        "No es posible procesar su solicitud con los datos proporcionados.");
 
   }
 

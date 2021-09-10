@@ -45,16 +45,18 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
 
       if (i != 0) {
         investmentYieldDto.setInitialInvestment(years.get(i - 1).getFinalBalance());
-        investmentYieldDto.setYearlyInput((years.get(i - 1).getYearlyInput())
-            * (1 + ((double) initialInvestmentDto.getYearlyInputIncrement() / 100)));
+        Double yearlyInput = (years.get(i - 1).getYearlyInput()) 
+            *  (1 + ((double) initialInvestmentDto.getYearlyInputIncrement() / 100));
+        investmentYieldDto.setYearlyInput((double) Math.round(yearlyInput));
       } else {
         investmentYieldDto.setInitialInvestment(initialInvestmentDto.getInitialInvestment());
         investmentYieldDto.setYearlyInput(initialInvestmentDto.getYearlyInput());
       }
-
-      investmentYieldDto.setInvestmentYield((investmentYieldDto.getInitialInvestment() 
+      
+      Double investmentYield = (investmentYieldDto.getInitialInvestment() 
           + investmentYieldDto.getYearlyInput()) 
-          * (initialInvestmentDto.getInvestmentYield() / 100));
+          * (initialInvestmentDto.getInvestmentYield() / 100);
+      investmentYieldDto.setInvestmentYield((double) Math.round(investmentYield));
 
       investmentYieldDto.setFinalBalance(investmentYieldDto.getInitialInvestment()
           + investmentYieldDto.getYearlyInput() + investmentYieldDto.getInvestmentYield());
@@ -72,17 +74,28 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
    */
   @Override
   public boolean validateInput(InitialInvestmentDto initialInvestmentDto) {
-    boolean flagValidate = true;
+    
+    this.setDefaults(initialInvestmentDto);
+    
+    boolean flagValidate = true; 
 
-    flagValidate = flagValidate && !(initialInvestmentDto.getInitialInvestment() < 1000);
-    flagValidate = flagValidate && !(initialInvestmentDto.getYearlyInput() < 0);
-    flagValidate = flagValidate && !(initialInvestmentDto.getYearlyInputIncrement() < 0);
-    flagValidate = flagValidate && !(initialInvestmentDto.getInvestmentYears() < 0);
-    flagValidate = flagValidate && !(initialInvestmentDto.getInvestmentYield() < 0);
+    flagValidate = flagValidate && (initialInvestmentDto.getInitialInvestment() >= 1000);
+    flagValidate = flagValidate && (initialInvestmentDto.getYearlyInput() >= 0.0);
+    flagValidate = flagValidate && (initialInvestmentDto.getYearlyInputIncrement() >= 0);
+    flagValidate = flagValidate && (initialInvestmentDto.getInvestmentYears() > 0);
+    flagValidate = flagValidate && (initialInvestmentDto.getInvestmentYield() > 0);
 
     return flagValidate;
-
-
+  }
+  
+  private void setDefaults(InitialInvestmentDto initialInvestmentDto) {
+    Double yearlyInput = initialInvestmentDto.getYearlyInput();
+    yearlyInput = yearlyInput == null ? 0.0 : yearlyInput;
+    initialInvestmentDto.setYearlyInput(yearlyInput);
+    
+    Integer yearlyInputIncrement = initialInvestmentDto.getYearlyInputIncrement();
+    yearlyInputIncrement = yearlyInputIncrement == null ? 0 : yearlyInputIncrement;
+    initialInvestmentDto.setYearlyInputIncrement(yearlyInputIncrement);
   }
 
 }
