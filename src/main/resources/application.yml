@@ -1,2 +1,36 @@
 server:
   port: 8080
+  
+spring:
+  application:
+    name: baseline-service-gcc
+  cloud:
+    config:
+      uri: http://localhost:8888
+      
+security:
+  basic:
+    enable: false
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 35
+      maximunSize: 35
+  command:
+    createRevenueGrid:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1500
+          semaphore:
+            maxConcurrentRequests: 500
+      circuitBreaker:
+        sleepWindowInMilliseconds: 5000    
+      

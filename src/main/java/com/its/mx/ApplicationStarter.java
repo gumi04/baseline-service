@@ -10,18 +10,26 @@
 *
 * Nombre de archivo: ApplicationStarter.java
 * Autor: gcontrer
-* Fecha de creación: 10 sep 2021
+* Fecha de creación: 15 sep 2021
 */
+
 
 package com.its.mx;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
+
 
 /**
  * The Class ApplicationStarter.
  */
 @SpringBootApplication
+@EnableDiscoveryClient
+@EnableHystrix // escanear
+@EnableHystrixDashboard // activa el grafico de monitoreo
 public class ApplicationStarter {
 
   /**

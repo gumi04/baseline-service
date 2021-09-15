@@ -10,7 +10,7 @@
 *
 * Nombre de archivo: CompoundInterestCalculatorImpl.java
 * Autor: gcontrer
-* Fecha de creación: 7 sep 2021
+* Fecha de creación: 15 sep 2021
 */
 
 
@@ -20,6 +20,7 @@ package com.its.mx.application.service.impl;
 import com.its.mx.application.dto.InitialInvestmentDto;
 import com.its.mx.application.dto.InvestmentYieldDto;
 import com.its.mx.application.service.CompoundInsterestCalculator;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
    * @return the array list
    */
   @Override
+  @HystrixCommand(commandKey = "createRevenueGrid", fallbackMethod = "fallbackRevenueGrid")
   public ArrayList<InvestmentYieldDto> createRevenueGrid(
       InitialInvestmentDto initialInvestmentDto) {
 
@@ -47,17 +49,17 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
 
       if (i != 0) {
         investmentYieldDto.setInitialInvestment(years.get(i - 1).getFinalBalance());
-        Double yearlyInput = (years.get(i - 1).getYearlyInput()) 
-            *  (1 + ((double) initialInvestmentDto.getYearlyInputIncrement() / 100));
+        Double yearlyInput = (years.get(i - 1).getYearlyInput())
+            * (1 + ((double) initialInvestmentDto.getYearlyInputIncrement() / 100));
         investmentYieldDto.setYearlyInput((double) Math.round(yearlyInput));
       } else {
         investmentYieldDto.setInitialInvestment(initialInvestmentDto.getInitialInvestment());
         investmentYieldDto.setYearlyInput(initialInvestmentDto.getYearlyInput());
       }
-      
-      Double investmentYield = (investmentYieldDto.getInitialInvestment() 
-          + investmentYieldDto.getYearlyInput()) 
-          * (initialInvestmentDto.getInvestmentYield() / 100);
+
+      Double investmentYield =
+          (investmentYieldDto.getInitialInvestment() + investmentYieldDto.getYearlyInput())
+              * (initialInvestmentDto.getInvestmentYield() / 100);
       investmentYieldDto.setInvestmentYield((double) Math.round(investmentYield));
 
       investmentYieldDto.setFinalBalance(investmentYieldDto.getInitialInvestment()
@@ -69,6 +71,19 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
   }
 
   /**
+   * Fallback revenue grid.
+   *
+   * @param initialInvestmentDto the initial investment dto
+   * @return the array list
+   */
+  public ArrayList<InvestmentYieldDto> fallbackRevenueGrid(
+      InitialInvestmentDto initialInvestmentDto) {
+    return null;
+  }
+
+
+
+  /**
    * Validate input.
    *
    * @param initialInvestmentDto the initial investment dto
@@ -76,10 +91,10 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
    */
   @Override
   public boolean validateInput(InitialInvestmentDto initialInvestmentDto) {
-    
+
     this.setDefaults(initialInvestmentDto);
-    
-    boolean flagValidate = true; 
+
+    boolean flagValidate = true;
 
     flagValidate = flagValidate && (initialInvestmentDto.getInitialInvestment() >= 1000);
     flagValidate = flagValidate && (initialInvestmentDto.getYearlyInput() >= 0.0);
@@ -89,12 +104,17 @@ public class CompoundInterestCalculatorImpl implements CompoundInsterestCalculat
 
     return flagValidate;
   }
-  
+
+  /**
+   * Sets the defaults.
+   *
+   * @param initialInvestmentDto the new defaults
+   */
   private void setDefaults(InitialInvestmentDto initialInvestmentDto) {
     Double yearlyInput = initialInvestmentDto.getYearlyInput();
     yearlyInput = yearlyInput == null ? 0.0 : yearlyInput;
     initialInvestmentDto.setYearlyInput(yearlyInput);
-    
+
     Integer yearlyInputIncrement = initialInvestmentDto.getYearlyInputIncrement();
     yearlyInputIncrement = yearlyInputIncrement == null ? 0 : yearlyInputIncrement;
     initialInvestmentDto.setYearlyInputIncrement(yearlyInputIncrement);
